@@ -13,16 +13,40 @@ import {
   X,
   ChevronRight,
   Award,
+  FolderOpen,
+  FileText,
+  Download,
+  Calendar,
+  ArrowRight,
 } from "lucide-react";
 import { SiGithub, SiLinkedin, SiHackerrank } from "react-icons/si";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+
+function AnimatedSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 const navItems = [
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
+  { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
-  { label: "Education", href: "#education" },
+  { label: "Blog", href: "#blog" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -553,6 +577,239 @@ function ContactSection() {
   );
 }
 
+function ProjectsSection() {
+  const projects = [
+    {
+      title: "Be Connected Platform",
+      description: "Procurement Management/Insights platform for Public and Private Sector. Built comprehensive front-end and back-end systems with real-time analytics.",
+      technologies: ["ASP.NET Web Forms", "DevExpress", "Redis", "Entity Framework", "amCharts"],
+      type: "Enterprise",
+    },
+    {
+      title: "Moneta Project Management",
+      description: "Issue tracking and project management tool built on ASP.NET MVC 5 with modern UI/UX design and responsive layouts.",
+      technologies: ["ASP.NET MVC 5", "JavaScript", "CSS", "Bootstrap"],
+      type: "Web App",
+    },
+    {
+      title: "Celebi Navigation App",
+      description: "Android navigation system with 4G networking integration. Real-time and predicted traffic data interpretation with government agency support.",
+      technologies: ["Android", "Java", "4G Networking", "Web Services", "HTML5"],
+      type: "Mobile",
+    },
+    {
+      title: "Istanbul Journey Planner",
+      description: "Graduation project similar to Transport for London journey planning system. Full route planning with public transit integration.",
+      technologies: ["Java", "Web Services", "Maps API", "Database"],
+      type: "Academic",
+    },
+  ];
+
+  return (
+    <section className="py-16 md:py-24 px-6 md:px-8 scroll-mt-24" id="projects">
+      <div className="max-w-6xl mx-auto">
+        <SectionHeader icon={FolderOpen} title="Projects" id="projects-header" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {projects.map((project, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="h-full hover-elevate">
+                <CardHeader className="pb-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <CardTitle className="text-lg font-semibold">{project.title}</CardTitle>
+                    <Badge variant="outline" className="text-xs shrink-0">
+                      {project.type}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech) => (
+                      <Badge key={tech} variant="secondary" className="text-xs">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogSection() {
+  const articles = [
+    {
+      title: "Building Scalable Web Applications with ASP.NET MVC",
+      excerpt: "Best practices for developing enterprise-level web applications using the ASP.NET MVC framework with focus on performance and maintainability.",
+      date: "2024-03-15",
+      readTime: "8 min read",
+      tags: ["ASP.NET", "Web Development", "Architecture"],
+    },
+    {
+      title: "Modern WordPress Plugin Development",
+      excerpt: "A comprehensive guide to building WordPress plugins using modern JavaScript and PHP practices, including React integration.",
+      date: "2024-02-20",
+      readTime: "12 min read",
+      tags: ["WordPress", "PHP", "JavaScript"],
+    },
+    {
+      title: "Mobile Navigation Apps: Lessons from Celebi",
+      excerpt: "Insights from developing a traffic-aware navigation system with real-time data processing and 4G network integration.",
+      date: "2024-01-10",
+      readTime: "6 min read",
+      tags: ["Android", "Mobile", "Navigation"],
+    },
+  ];
+
+  return (
+    <section className="py-16 md:py-24 px-6 md:px-8 bg-card/50 scroll-mt-24" id="blog">
+      <div className="max-w-6xl mx-auto">
+        <SectionHeader icon={FileText} title="Blog" id="blog-header" />
+
+        <div className="space-y-6">
+          {articles.map((article, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="hover-elevate">
+                <CardContent className="py-6">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div className="space-y-3 flex-1">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(article.date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                        <span>{article.readTime}</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {article.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {article.tags.map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm" className="shrink-0 gap-1">
+                      Read More
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ResumeDownloadSection() {
+  const handleDownload = () => {
+    const resumeContent = `TURGAY CEYLAN
+Full Stack Developer & Software Engineer
+
+CONTACT
+Email: turgay@turgayceylan.com
+Website: turgay.io
+GitHub: github.com/trgcyln
+LinkedIn: linkedin.com/in/trgcyln
+
+EXPERIENCE
+
+Be Connected - Full Stack Developer
+Procurement Management/Insights for Public and Private Sector
+Technologies: ASP.NET Web Forms, DevExpress, Redis, Entity Framework, amCharts
+
+Moneta - Front-End Developer
+Project Management & Issue Tracking based on ASP.NET MVC 5
+
+Celebi - Android Developer
+Traffic-based navigation system with 4G networking and real-time data
+
+SKILLS
+
+Frontend: JavaScript, HTML5, CSS & LESS, jQuery
+Backend: C#, ASP.NET MVC, Entity Framework, Java, J2EE, PHP
+Databases: MSSQL, MySQL, Oracle 11g, Redis
+DevOps: Ubuntu, Nginx, Windows Server, Hyper-V, Docker, Git
+
+EDUCATION
+
+Advanced Java, SOA Concepts, TCP/IP Networking
+Linux System Administration, C# & ASP.NET
+OOP Analysis & Design, Mobile App Development
+
+Graduation Projects:
+- Android Navigation Application with live traffic data
+- Istanbul's Journey Planner (similar to Transport for London)
+`;
+
+    const blob = new Blob([resumeContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Turgay_Ceylan_Resume.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <section className="py-12 px-6 md:px-8">
+      <div className="max-w-6xl mx-auto">
+        <Card className="bg-primary/5 border-primary/20">
+          <CardContent className="py-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-center md:text-left">
+                <h3 className="text-xl font-semibold text-foreground mb-2">
+                  Download My Resume
+                </h3>
+                <p className="text-muted-foreground">
+                  Get a copy of my complete resume with all experience and qualifications.
+                </p>
+              </div>
+              <Button onClick={handleDownload} className="gap-2" data-testid="button-download-resume">
+                <Download className="h-4 w-4" />
+                Download Resume
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer className="py-8 px-6 md:px-8 border-t border-border">
@@ -578,11 +835,30 @@ export default function Home() {
       <Navigation />
       <main>
         <HeroSection />
-        <ExperienceSection />
-        <SkillsSection />
-        <EducationSection />
-        <ReferencesSection />
-        <ContactSection />
+        <AnimatedSection>
+          <ExperienceSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <ProjectsSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <SkillsSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <BlogSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <EducationSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <ReferencesSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <ResumeDownloadSection />
+        </AnimatedSection>
+        <AnimatedSection>
+          <ContactSection />
+        </AnimatedSection>
       </main>
       <Footer />
     </div>
