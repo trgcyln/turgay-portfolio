@@ -516,9 +516,9 @@ function ContactSection() {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-6 md:px-8" id="contact">
+    <section className="py-16 md:py-24 px-6 md:px-8 scroll-mt-24" id="about">
       <div className="max-w-6xl mx-auto">
-        <SectionHeader icon={Mail} title="About & Contact" id="about" />
+        <SectionHeader icon={Mail} title="About & Contact" id="contact" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {contacts.map((contact) => (
